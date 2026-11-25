@@ -423,7 +423,12 @@
       case "backup": download(`pocket-ledger-backup-${today()}.json`, JSON.stringify(S), "application/json"); break;
       case "restore": $("#restoreFile").click(); break;
       case "reset":
-        if (confirm(t("confirmReset"))) { const keepPro = S.pro; S = defaults(); S.pro = keepPro; persist(); render(); }
+        open(`<h2>${esc(t("resetAll"))}</h2><p>${esc(t("confirmReset"))}</p>
+          <button class="btn danger" type="button" data-yes>${esc(t("delete"))}</button>
+          <button class="btn ghost" type="button" data-close>${esc(t("cancel"))}</button>`, (el) => {
+          $("[data-close]", el).onclick = close;
+          $("[data-yes]", el).onclick = () => { const keepPro = S.pro; S = defaults(); S.pro = keepPro; persist(); close(); render(); };
+        });
         break;
     }
   });
